@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Колесо Удачи | Лосось и Чеддер</title>
+  <style>
+    body {
+      background: #111;
+      color: #fff;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .wheel-container {
+      position: relative;
+      width: 400px;
+      height: 400px;
+    }
+    .wheel {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 10px solid #fff;
+      transition: transform 5s cubic-bezier(0.33, 1, 0.68, 1);
+    }
+    .pointer {
+      position: absolute;
+      top: -40px;
+      left: 50%;
+      transform: translateX(-50%) rotate(0deg);
+      width: 0;
+      height: 0;
+      border-left: 30px solid transparent;
+      border-right: 30px solid transparent;
+      border-top: 60px solid red;
+    }
+    button {
+      margin-top: 30px;
+      padding: 10px 20px;
+      font-size: 18px;
+      background: gold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 20px;
+      color: lime;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="wheel-container">
+    <div class="pointer"></div>
+    <img id="wheel" class="wheel" src="kolyoso.png" alt="Колесо Обжорства" />
+  </div>
+  <button id="spinButton">Крутить!</button>
+  <div class="result" id="result"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const sectors = [
+        { name: "Кола", chance: 15, promo: "4217" },
+        { name: "Онигири с крабом", chance: 15, promo: "7351" },
+        { name: "Сырные ломтики", chance: 10, promo: "1628" },
+        { name: "Фри", chance: 15, promo: "9046" },
+        { name: "Наггетсы", chance: 15, promo: "5832" },
+        { name: "Маки с лососем", chance: 5, promo: "3174" },
+        { name: "Запечённый мини-ролл", chance: 5, promo: "8462" },
+        { name: "Пицца Маргарита", chance: 1, promo: "2095" },
+        { name: "Крылья 8 шт", chance: 1, promo: "7901" },
+        { name: "Онигирадзу с крабом", chance: 1, promo: "4360" },
+        { name: "Филадельфия классическая", chance: 0.2, promo: "1203" },
+        { name: "1000 бонусов", chance: 15, promo: "8888" },
+        { name: "Сет 'Венеция'", chance: 0.001, promo: "0001" },
+        { name: "Повезёт в любви", chance: 1.799, promo: "7777" }
+      ];
+
+      const wheel = document.getElementById("wheel");
+      const result = document.getElementById("result");
+      const button = document.getElementById("spinButton");
+
+      button.addEventListener('click', function() {
+        const total = sectors.reduce((sum, s) => sum + s.chance, 0);
+        const rand = Math.random() * total;
+        let acc = 0;
+        let selectedSector = sectors[0];
+
+        for (let sector of sectors) {
+          acc += sector.chance;
+          if (rand <= acc) {
+            selectedSector = sector;
+            break;
+          }
+        }
+
+        const index = sectors.indexOf(selectedSector);
+        const degPerSector = 360 / sectors.length;
+        const rotation = 3600 + (360 - index * degPerSector - degPerSector / 2);
+
+        wheel.style.transform = `rotate(${rotation}deg)`;
+
+        setTimeout(() => {
+          result.textContent = `🎁 ${selectedSector.name} — Промокод: ${selectedSector.promo}`;
+        }, 5200);
+      });
+    });
+  </script>
+</body>
+</html>
